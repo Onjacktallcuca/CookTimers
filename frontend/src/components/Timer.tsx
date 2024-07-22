@@ -7,7 +7,7 @@ export default function Timer( {name, duration}: TimerProps) {
 
   const interval = useRef< number | null >(null);
   const [remainingTime, setRemainingTime] = useState(duration * 1000);
-  const { isRunning, removeTimer } = userTimersContext();
+  const { isRunning, removeTimer, tozeroTimer } = userTimersContext();
 
   if(remainingTime <= 0 && interval.current){
     clearInterval(interval.current);
@@ -46,9 +46,18 @@ export default function Timer( {name, duration}: TimerProps) {
   };
   const handleRemoveTimer = ()=> {
 
-    if(window.confirm('Tem certeza que deseja excluir esse item?'))
+    if(window.confirm('Tem certeza que deseja excluir esse timer?'))
     removeTimer(name);
   }
+
+  const handleToZeroTimer = ()=> {
+
+
+    if(window.confirm('Tem certeza que deseja zerar esse timer?'))
+      setRemainingTime(0);
+      tozeroTimer(name);
+  }
+  
 
   return (
     <Container as="article" className='form-container'>
@@ -60,11 +69,12 @@ export default function Timer( {name, duration}: TimerProps) {
       <p>
         {formattedRemainingTime(remainingTime)}
       </p>
-      <div>
-        <p>
-        <Button onClick={handleRemoveTimer}>Encerrar</Button>
-      </p>
-      </div>
+       <div className='button-container'>
+          <Button className='button' onClick={handleRemoveTimer}>Excluir</Button>
+          <Button className='button' onClick={handleToZeroTimer}>Zerar</Button>
+        </div>
+        
+      
     </Container>
   );
 }

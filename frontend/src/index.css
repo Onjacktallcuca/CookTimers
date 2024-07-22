@@ -36,7 +36,7 @@ ul {
   max-width: 40rem;
   margin: 2rem auto;
   padding: 0;
-  font-family: 'Handjet', sans-serif;
+  font-family: sans-serif, 'Handjet';
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(auto-fit, minmax(18rem, 10rem));
@@ -109,12 +109,19 @@ input {
 
 .button {
   font: inherit;
-  padding: 0.5rem;
+  align-self: center;
+  padding: 0.5rem 1rem; /* Espaço ajustado para o texto do botão */
+  margin: 10%;
   border-radius: 4px;
   border: 1px solid #338196;
   background-color: #338196;
   color: white;
   cursor: pointer;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem; /* Espaço entre os botões */
 }
 
 .button:hover,

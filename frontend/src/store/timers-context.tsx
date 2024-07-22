@@ -20,6 +20,7 @@ type TimerContextValue = TimersState & {
     startTimer: () => void;
     stopTimer: () => void;
     removeTimer: (name: string) => void;
+    tozeroTimer: (name: string) => void;
 };
 
 export const TimersContext = createContext<TimerContextValue | null>(null);
@@ -54,9 +55,15 @@ type RemoveTimeAction = {
     type: 'REMOVE_TIMER'
     payload: string | null
 }
+type ToZeroTimeAction = {
+    type: 'TOZERO_TIMER'
+    payload: string | null
+}
 
 
-type Action = AddTimeAction | StopTimeAction | StartTimeAction | RemoveTimeAction;
+
+
+type Action = AddTimeAction | StopTimeAction | StartTimeAction | RemoveTimeAction | ToZeroTimeAction;
 
 function timersReducer (state: TimersState, action: Action ): TimersState {
 
@@ -65,12 +72,23 @@ function timersReducer (state: TimersState, action: Action ): TimersState {
             return {
                 ...state,
                 isRunning: true
-            }
+            };
         case 'REMOVE_TIMER':
             return {
                 ...state,
                 timers: state.timers.filter((timer) => timer.name !== action.payload)
-            }
+            };
+
+        case 'TOZERO_TIMER':
+            return {
+                ...state,
+                timers: state.timers.map((timer)=> 
+                    timer.name === action.payload
+                    ? { ...timer, duration: 0 }  
+                    : timer
+                )
+            };
+
         case 'STOP_TIMER':
             return {
                 ...state,
@@ -88,8 +106,7 @@ function timersReducer (state: TimersState, action: Action ): TimersState {
                     },
                 ],
                 isRunning: true
-            }
-    
+            };
         default:
             break;
     }
@@ -119,6 +136,10 @@ export default function TimersContextProvider({children} : TimersContextProvider
         removeTimer(name) {
             dispatch({ type: 'REMOVE_TIMER', payload: name });
         },
+        tozeroTimer(name) {
+            dispatch({ type: 'TOZERO_TIMER', payload: name });
+        },
+        
     }
     return <TimersContext.Provider value={ctx}>{children}</TimersContext.Provider>
 }
