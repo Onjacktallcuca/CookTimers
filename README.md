@@ -1,18 +1,17 @@
 # CookTimers
-Projeto usando os conceitos de useState, useRef, entre outros hooks do react
+Projeto usando os conceitos de useState, useRef, useContext entre outros hooks do react.
 
 
-*Git clone
+![Descrição da Imagem](frontend/src/assets/main.png)
 
-*cd CookTimers
+Steps:
+  Git clone
+  cd CookTimers
+  cd 01 Starting Project
+  yarn install
+  yarn dev
 
-*cd 01 Starting Project
-
-*yarn install
-
-*yarn dev
-
-O projeto ira rodar por padrão em:  Local:   http://localhost:5173/
+O projeto por padrão vai rodar em:  Local:   http://localhost:5173/
 
 
 
