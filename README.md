@@ -4,6 +4,13 @@ Projeto usando os conceitos de useState, useRef, useContext entre outros hooks d
 
 ![Descrição da Imagem](frontend/src/assets/main.png)
 
+Passos para a instalação
+
+```markdown
+
+
+Para instalar as dependências, use o comando `npm ou yarn`.
+
 Steps:
   Git clone
   cd CookTimers
