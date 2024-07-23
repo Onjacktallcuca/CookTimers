@@ -3,11 +3,11 @@ import { userTimersContext, type Timer as TimerProps} from '../store/timers-cont
 import { useEffect, useRef, useState } from 'react';
 import Button from './UI/Button.tsx';
 
-export default function Timer( {name, duration}: TimerProps) {
+export default function Timer( {name, duration, originalDuration}: TimerProps) {
 
   const interval = useRef< number | null >(null);
   const [remainingTime, setRemainingTime] = useState(duration * 1000);
-  const { isRunning, removeTimer, tozeroTimer } = userTimersContext();
+  const { isRunning, removeTimer, tozeroTimer, resetTimer } = userTimersContext();
 
   if(remainingTime <= 0 && interval.current){
     clearInterval(interval.current);
@@ -57,8 +57,28 @@ export default function Timer( {name, duration}: TimerProps) {
       setRemainingTime(0);
       tozeroTimer(name);
   }
-  
 
+  const handleToResetTimer = () => {
+      const newRemainingTime = originalDuration * 1000;
+
+      setRemainingTime(newRemainingTime); // Defina o tempo restante para a duração original em milissegundos
+      resetTimer(name, originalDuration); // Chame a função de reset com o nome e a duração original
+
+      if (isRunning) {
+        clearInterval(interval.current as number);
+        interval.current = setInterval(() => {
+            setRemainingTime((prevTime) => {
+                if (prevTime <= 0) {
+                    clearInterval(interval.current as number);
+                    return 0;
+                }
+                return prevTime - 50;
+            });
+        }, 50);
+    }
+  };
+ 
+      
   return (
     <Container as="article" className='form-container'>
       <h2>{name}</h2>
@@ -72,6 +92,7 @@ export default function Timer( {name, duration}: TimerProps) {
        <div className='button-container'>
           <Button className='button' onClick={handleRemoveTimer}>Excluir</Button>
           <Button className='button' onClick={handleToZeroTimer}>Zerar</Button>
+          <Button className='button' onClick={handleToResetTimer}>Reset</Button>
         </div>
         
       

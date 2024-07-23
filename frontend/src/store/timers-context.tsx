@@ -4,6 +4,7 @@ import Timer from "../components/Timer";
 export type Timer = {
     name: string;
     duration: number;
+    originalDuration: number;
 };
 
 type TimersState = {
@@ -21,6 +22,7 @@ type TimerContextValue = TimersState & {
     stopTimer: () => void;
     removeTimer: (name: string) => void;
     tozeroTimer: (name: string) => void;
+    resetTimer: (name: string, originalDuration: number) => void;
 };
 
 export const TimersContext = createContext<TimerContextValue | null>(null);
@@ -60,10 +62,18 @@ type ToZeroTimeAction = {
     payload: string | null
 }
 
+type ResetTimeAction = {
+    type: 'RESET_TIMER'
+    payload: {
+        name: string,
+        duration: number;
+    };
+};
 
 
 
-type Action = AddTimeAction | StopTimeAction | StartTimeAction | RemoveTimeAction | ToZeroTimeAction;
+
+type Action = AddTimeAction | StopTimeAction | StartTimeAction | RemoveTimeAction | ToZeroTimeAction | ResetTimeAction;
 
 function timersReducer (state: TimersState, action: Action ): TimersState {
 
@@ -78,7 +88,6 @@ function timersReducer (state: TimersState, action: Action ): TimersState {
                 ...state,
                 timers: state.timers.filter((timer) => timer.name !== action.payload)
             };
-
         case 'TOZERO_TIMER':
             return {
                 ...state,
@@ -88,13 +97,11 @@ function timersReducer (state: TimersState, action: Action ): TimersState {
                     : timer
                 )
             };
-
         case 'STOP_TIMER':
             return {
                 ...state,
                 isRunning: false
             }
-
         case 'ADD_TIMER':
             return {
                 ...state,
@@ -102,11 +109,24 @@ function timersReducer (state: TimersState, action: Action ): TimersState {
                     ...state.timers,
                     {
                         name: action.payload.name,
-                        duration: action.payload.duration
+                        duration: action.payload.duration,
+                        originalDuration: action.payload.duration,
                     },
                 ],
                 isRunning: true
             };
+       
+        case 'RESET_TIMER':
+            return {
+                ...state,
+                timers: state.timers.map((timer) =>
+                    timer.name === action.payload.name
+                        ? { ...timer, duration: action.payload.duration }
+                        : timer
+                ),
+                isRunning: true,
+            };
+        // ... outros casos
         default:
             break;
     }
@@ -115,10 +135,7 @@ function timersReducer (state: TimersState, action: Action ): TimersState {
 }
 
 export default function TimersContextProvider({children} : TimersContextProviderProps){
-    
     const [timersState, dispatch] = useReducer(timersReducer, initialState);
-
-
 
     const ctx: TimerContextValue = {
         timers: timersState.timers,
@@ -138,6 +155,9 @@ export default function TimersContextProvider({children} : TimersContextProvider
         },
         tozeroTimer(name) {
             dispatch({ type: 'TOZERO_TIMER', payload: name });
+        },
+        resetTimer(name, duration) {
+            dispatch({ type: 'RESET_TIMER', payload: { name, duration } });
         },
         
     }

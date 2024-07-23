@@ -110,8 +110,7 @@ input {
 .button {
   font: inherit;
   align-self: center;
-  padding: 0.5rem 1rem; /* Espaço ajustado para o texto do botão */
-  margin: 10%;
+  padding: 0.2rem 0.6rem; /* Espaço ajustado para o texto do botão */
   border-radius: 4px;
   border: 1px solid #338196;
   background-color: #338196;
